@@ -112,5 +112,59 @@ window.addEventListener('DOMContentLoaded', () => {
 
     setClock('.timer', deadline);
 
+    // Modal
+
+    const modalTrigger = document.querySelectorAll('[data-modal]');
+    const modal = document.querySelector('.modal');
+    const modalCloseBtn = document.querySelector('[data-close]');
+
+    function openModal() {
+        modal.style.display = 'block';
+        document.body.style.overflow = 'hidden'; /* прописали стиль, 
+        который не позволяет прокручивать страницу */
+
+        clearInterval(modalTimerId); /** в случае если пользователь
+        сам открыл модальное окно, мы отменяем setTimeout 
+        c всплытием модального окна */
+    }
+
+    modalTrigger.forEach(item => {
+        item.addEventListener('click', openModal);
+    });
+
+    function closeModal() {
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+    }
+
+    modalCloseBtn.addEventListener('click', closeModal);
+
+    /** Ниже мы повесили событие на само модальное окно, 
+     * при нажатии на место за пределами этого окна,
+     * оно закрывается
+     */
+    modal.addEventListener('click', (e) => { 
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+
+    /** Событие нажатии кнопки в доке, при коротором
+     * закрывается модальное окно
+     */
+    document.addEventListener('keydown', (e) => {
+        if (e.code === 'Escape' && modal.style.display == 'block') {
+            closeModal();
+        }
+    });
+
+    const modalTimerId = setTimeout(openModal, 5000);
+
+    window.addEventListener('scroll', () => {
+        if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
+            openModal();
+            }
+    });
+
 
 });
