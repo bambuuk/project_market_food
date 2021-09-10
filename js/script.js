@@ -1,3 +1,4 @@
+'use strict';
 window.addEventListener('DOMContentLoaded', () => {
 
     // Tabs
@@ -191,12 +192,11 @@ window.addEventListener('DOMContentLoaded', () => {
         render() {
             const element = document.createElement('div');
             if (this.classes.length === 0) {
-                this.element = 'menu__classes';
+                this.element = 'menu__item';
                 element.classList.add(this.element);
             } else {
                 this.classes.forEach(className => element.classList.add(className));
             }
-
 
             element.innerHTML = `
                     <img src=${this.src} alt=${this.alt}>
@@ -251,6 +251,76 @@ window.addEventListener('DOMContentLoaded', () => {
         'menu__item'
     ).render();
 
+    // Forms
+
+    const forms = document.querySelectorAll('form');
+
+    const message = {
+        loading: 'Загрузка',
+        success: 'Спасибо, скоро мы с вами свяжемся',
+        failure: 'Что-то пошло не так'
+    };
+
+    /** Здесь мы на каждую форму добавили ф-цию postData */
+    forms.forEach(item => {
+        postData(item);
+    });
+
+    function postData(form) {
+        form.addEventListener('submit', (e) => {
+            e.preventDefault(); /** Отменяем стандартное поведение формы */
+
+            /** Здесь мы создаём новый ел, в который помещаем инфу
+             * о статусе запроса
+             */
+            const statusMessage = document.createElement('div');
+            statusMessage.classList.add('status');
+            statusMessage.textContent = message.loading;
+            form.append(statusMessage);
+
+            const request = new XMLHttpRequest();
+            request.open('POST', 'server.php'); /** Настраиваем запрос 
+            с помощью метода open */
+
+            request.setRequestHeader('Content-type', 'application/json');
+
+            const formData = new FormData(form); /** пишем форму, 
+            которая принимает данные от пользователя и делает данные 
+            в формате ключ-значение */
+
+            const object = {};
+            formData.forEach(function(value, key){
+                object[key] = value;
+            });
+
+            const json = JSON.stringify(object);
+
+            request.send(json); /** отправляем нашу форму 
+            в формате json, которую скопировали с formData 
+            в новый объект, перевели в формат json и отправили 
+            запрос */
+
+            request.addEventListener('load', () => { /** Здесь мыы вешаем 
+                слушатель события load, срабатывает, когда наш запрос 
+                полностью загрузился */
+
+                if (request.status === 200) { // 200 - запрос успешно прошел
+                    console.log(request.response);
+                    statusMessage.textContent = message.success; 
+                    /** Когда наш запрос успешно отработал, мы выводим 
+                     * сообщение, что всё ок
+                     */
+                     form.reset(); // обнуляем введённые значения в формах 
+                     setTimeout(() => {
+                         statusMessage.remove();
+                     }, 3000);
+                } else {
+                    statusMessage.textContent = message.failure;
+                    /** Если запрос не успешный, то говорим об этом пользователю */
+                }
+            });
+        });
+    }
 
 
 });
