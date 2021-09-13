@@ -285,11 +285,7 @@ window.addEventListener('DOMContentLoaded', () => {
             `;
             form.insertAdjacentElement('afterend', statusMessage);
 
-            const request = new XMLHttpRequest();
-            request.open('POST', 'server.php'); /** Настраиваем запрос 
-            с помощью метода open */
-
-            request.setRequestHeader('Content-type', 'application/json');
+            
 
             const formData = new FormData(form); /** пишем форму, 
             которая принимает данные от пользователя и делает данные 
@@ -300,29 +296,31 @@ window.addEventListener('DOMContentLoaded', () => {
                 object[key] = value;
             });
 
-            const json = JSON.stringify(object);
+            fetch('server.php', {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(object)
+            })
+            .then(data => data.text()) // позволяет получать ответ от сервера в нормальном виде
+            .then(data => {
+                    console.log(data); /** data - это те данные, 
+                    которые возвращаются из промиса, которые 
+                    вернул сервер */
 
-            request.send(json); /** отправляем нашу форму 
-            в формате json, которую скопировали с formData 
-            в новый объект, перевели в формат json и отправили 
-            запрос */
-
-            request.addEventListener('load', () => { /** Здесь мыы вешаем 
-                слушатель события load, срабатывает, когда наш запрос 
-                полностью загрузился */
-
-                if (request.status === 200) { // 200 - запрос успешно прошел
-                    console.log(request.response);
                     showThanksModal(message.success);
                     /** Когда наш запрос успешно отработал, мы выводим 
                      * модалку-благодарку
                      */
-                    form.reset(); // обнуляем введённые значения в формах 
+
                     statusMessage.remove();
-                } else {
-                    showThanksModal(message.failure);
-                    /** Если запрос не успешный, то выводим соответствующую модалку */
-                }
+            }).catch(() => {
+                showThanksModal(message.failure); /** Если запрос 
+                не успешный, то выводим соответствующую модалку */
+                
+            }).finally(() => {
+                form.reset(); // обнуляем введённые значения в формах 
             });
         });
     }
