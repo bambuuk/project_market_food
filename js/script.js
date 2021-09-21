@@ -220,40 +220,26 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    new MenuCard(
-        "img/tabs/vegy.jpg",
-        "vegy",
-        'Меню "Фитнес"',
-        `Меню "Фитнес" - это новый подход к приготовлению 
-        блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. 
-        Это абсолютно новый продукт с оптимальной ценой и высоким качеством!`,
-        9,
-        ".menu .container"
-    ).render();
+    const getResource = async (url) => {
 
-    new MenuCard(
-        "img/tabs/post.jpg",
-        "post",
-        'Меню "Постное"',
-        `Меню “Постное” - это тщательный подбор ингредиентов: 
-        полное отсутствие продуктов животного происхождения, 
-        молоко из миндаля, овса, кокоса или гречки, правильное 
-        количество белков за счет тофу и импортных вегетарианских стейков.`,
-        14,
-        ".menu .container"
-    ).render();
+        // В переменной res мы получаем промис
+        const res = await fetch(url);
 
-    new MenuCard(
-        "img/tabs/elite.jpg",
-        "elite",
-        'Меню “Премиум”',
-        `В меню “Премиум” мы используем не только красивый 
-        дизайн упаковки, но и качественное исполнение блюд. 
-        Красная рыба, морепродукты, фрукты - ресторанное меню 
-        без похода в ресторан!`,
-        21,
-        ".menu .container"
-    ).render();
+        /** Здесь мы создаём ошибкуб если статус запроса неудачный */
+        if (!res.ok) {
+            throw new Error(`Could not fetch ${url}, status: ${res.status}`);
+        }
+
+        return await res.json(); // возвращаем проми с формате json
+    };
+
+    getResource('http://localhost:3000/menu')
+        .then(data => {
+            /** в методе forEach мы используем деструктиризацию объекта */
+            data.forEach(({img, altimg, title, descr, price}) => {
+                new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
+            });
+        });
 
     // Forms
 
@@ -267,10 +253,26 @@ window.addEventListener('DOMContentLoaded', () => {
 
     /** Здесь мы на каждую форму добавили ф-цию postData */
     forms.forEach(item => {
-        postData(item);
+        bindPostData(item);
     });
 
-    function postData(form) {
+    // Постинг данных
+    const postData = async (url, data) => {
+
+        // В переменной res мы получаем промис
+        const res = await fetch(url, {
+            method: 'POST',
+            headers: {
+                    'Content-type': 'application/json'
+                },
+            body: data // data - данные, которые будут постится
+        });
+
+        return await res.json(); // возвращаем проми с формате json
+    };
+
+    /** Привязываем постинг данных */
+    function bindPostData(form) {
         form.addEventListener('submit', (e) => {
             e.preventDefault(); /** Отменяем стандартное поведение формы */
 
@@ -291,19 +293,12 @@ window.addEventListener('DOMContentLoaded', () => {
             которая принимает данные от пользователя и делает данные 
             в формате ключ-значение */
 
-            const object = {};
-            formData.forEach(function (value, key) {
-                object[key] = value;
-            });
 
-            fetch('server.php', {
-                method: 'POST',
-                headers: {
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(object)
-            })
-            .then(data => data.text()) // позволяет получать ответ от сервера в нормальном виде
+            /** Преобразум formData в json формат */
+            const json = JSON.stringify(Object.fromEntries(formData.entries()));
+
+
+            postData('http://localhost:3000/requests', json)
             .then(data => {
                     console.log(data); /** data - это те данные, 
                     которые возвращаются из промиса, которые 
@@ -332,7 +327,9 @@ window.addEventListener('DOMContentLoaded', () => {
         prevModalDialog.classList.add('hide'); // скрыли то, что на модалке
         openModal(); // открыли само модальное окно
 
+
         /** Создаём новую начинку модального окна */
+
         const thanksModal = document.createElement('div');
         thanksModal.classList.add('modal__dialog');
         thanksModal.innerHTML = `
@@ -356,5 +353,9 @@ window.addEventListener('DOMContentLoaded', () => {
         }, 4000);
     }
 
+    fetch('http://localhost:3000/menu') // отправляем запрос на db.json
+        .then(data => data.json()) /** получаем ответ 
+        в data и превращаем его в обычный js объект */
+        .then(res => console.log(res));
 
 });
