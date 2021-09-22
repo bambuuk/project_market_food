@@ -230,16 +230,24 @@ window.addEventListener('DOMContentLoaded', () => {
             throw new Error(`Could not fetch ${url}, status: ${res.status}`);
         }
 
-        return await res.json(); // возвращаем проми с формате json
+        return await res.json(); // возвращаем промис в формате json
     };
 
-    getResource('http://localhost:3000/menu')
-        .then(data => {
-            /** в методе forEach мы используем деструктиризацию объекта */
-            data.forEach(({img, altimg, title, descr, price}) => {
-                new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
-            });
+    // getResource('http://localhost:3000/menu')
+    //     .then(data => {
+    //         /** в методе forEach мы используем деструктиризацию объекта */
+    //         data.forEach(({img, altimg, title, descr, price}) => {
+    //             new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
+    //         });
+    //     });
+
+    axios.get('http://localhost:3000/menu')
+    .then(data => {
+        data.data.forEach(({img, altimg, title, descr, price}) => {
+        new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
         });
+    });
+
 
     // Forms
 
