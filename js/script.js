@@ -367,64 +367,111 @@ window.addEventListener('DOMContentLoaded', () => {
         .then(res => console.log(res));
 
     
-    // Слайдеры
+    // Slider
 
     // Мой вариант слайдера
 
-    const sliderNext = document.querySelector('.offer__slider-next'),
-          sliderPrev = document.querySelector('.offer__slider-prev'),
-          curentCounter = document.querySelector('#current'),
-          sliderImages = document.querySelectorAll('.offer__slide');
+    // const sliderNext = document.querySelector('.offer__slider-next'),
+    //       sliderPrev = document.querySelector('.offer__slider-prev'),
+    //       curentCounter = document.querySelector('#current'),
+    //       sliderImages = document.querySelectorAll('.offer__slide');
 
 
-    function renderImg() {
-        sliderImages.forEach((item, i) => {
-            if (i == curentCounter.textContent-1) {
-                item.style.display = 'block';    
-            } else {
-                item.style.display = 'none';
-            }
-        });
+    // function renderImg() {
+    //     sliderImages.forEach((item, i) => {
+    //         if (i == curentCounter.textContent-1) {
+    //             item.style.display = 'block';    
+    //         } else {
+    //             item.style.display = 'none';
+    //         }
+    //     });
+    // }
+
+    // renderImg();
+
+    // const useNextSlider = () => {
+
+    //     if (+curentCounter.textContent >= 1 && +curentCounter.textContent <= 3) {
+    //         curentCounter.textContent = `0${+curentCounter.textContent + 1}`;
+    //         renderImg();
+    //     } else {
+    //         curentCounter.textContent = '01';
+    //         renderImg();
+    //     }
+    // };
+
+    // const usePreviousSlider = () => {
+
+    //     if (+curentCounter.textContent > 1 && +curentCounter.textContent <= 4) {
+    //         curentCounter.textContent = `0${curentCounter.textContent - 1}`;
+    //         renderImg();
+    //     } else {
+    //         curentCounter.textContent = '04';
+    //         renderImg();
+    //     }
+    // };
+    
+    // sliderNext.addEventListener('click', () => {
+    //     useNextSlider();
+    // });
+
+    // sliderPrev.addEventListener('click', () => {
+    //     usePreviousSlider();
+    // });
+
+
+
+    
+    // The first way to create a slider for a lesson 
+
+    const slides = document.querySelectorAll('.offer__slide'),
+        prev = document.querySelector('.offer__slider-prev'),
+        next = document.querySelector('.offer__slider-next'),
+        total = document.querySelector('#total'),
+        current = document.querySelector('#current');
+
+    let slideIndex = 1;
+
+    showSlides(slideIndex);
+
+    if (slides.length < 10) {
+        total.textContent = `0${slides.length}`;
+    } else {
+        total.textContent = slides.length;
     }
 
-    renderImg();
-
-    const useNextSlider = () => {
-
-        sliderImages.forEach(item => {
-            item.style.display = 'none';
-        });
-
-        if (+curentCounter.textContent >= 1 && +curentCounter.textContent <= 3) {
-            curentCounter.textContent = `0${+curentCounter.textContent + 1}`;
-            renderImg();
-        } else {
-            curentCounter.textContent = '01';
-            renderImg();
+    function showSlides(n) {
+        if (n > slides.length) {
+            slideIndex = 1;
         }
-    };
-
-    const usePreviousSlider = () => {
-
-        sliderImages.forEach(item => {
-            item.style.display = 'none';
-        });
-
-        if (+curentCounter.textContent > 1 && +curentCounter.textContent <= 4) {
-            curentCounter.textContent = `0${curentCounter.textContent - 1}`;
-            renderImg();
-        } else {
-            curentCounter.textContent = '04';
-            renderImg();
+        if (n < 1) {
+            slideIndex = slides.length;
         }
-    };
-    
-    sliderNext.addEventListener('click', () => {
-        useNextSlider();
+
+        slides.forEach((item) => item.style.display = 'none');
+
+        slides[slideIndex - 1].style.display = 'block'; // Как ваша самостоятельная работа - переписать на использование классов show/hide
+
+        if (slides.length < 10) {
+            current.textContent = `0${slideIndex}`;
+        } else {
+            current.textContent = slideIndex;
+        }
+        
+    }
+
+    function plusSlides (n) {
+        showSlides(slideIndex += n);
+    }
+
+    prev.addEventListener('click', function(){
+        plusSlides(-1);
     });
 
-    sliderPrev.addEventListener('click', () => {
-        usePreviousSlider();
+    next.addEventListener('click', function(){
+        plusSlides(1);
     });
+
+
 
 });
