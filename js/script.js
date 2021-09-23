@@ -366,4 +366,65 @@ window.addEventListener('DOMContentLoaded', () => {
         в data и превращаем его в обычный js объект */
         .then(res => console.log(res));
 
+    
+    // Слайдеры
+
+    // Мой вариант слайдера
+
+    const sliderNext = document.querySelector('.offer__slider-next'),
+          sliderPrev = document.querySelector('.offer__slider-prev'),
+          curentCounter = document.querySelector('#current'),
+          sliderImages = document.querySelectorAll('.offer__slide');
+
+
+    function renderImg() {
+        sliderImages.forEach((item, i) => {
+            if (i == curentCounter.textContent-1) {
+                item.style.display = 'block';    
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+
+    renderImg();
+
+    const useNextSlider = () => {
+
+        sliderImages.forEach(item => {
+            item.style.display = 'none';
+        });
+
+        if (+curentCounter.textContent >= 1 && +curentCounter.textContent <= 3) {
+            curentCounter.textContent = `0${+curentCounter.textContent + 1}`;
+            renderImg();
+        } else {
+            curentCounter.textContent = '01';
+            renderImg();
+        }
+    };
+
+    const usePreviousSlider = () => {
+
+        sliderImages.forEach(item => {
+            item.style.display = 'none';
+        });
+
+        if (+curentCounter.textContent > 1 && +curentCounter.textContent <= 4) {
+            curentCounter.textContent = `0${curentCounter.textContent - 1}`;
+            renderImg();
+        } else {
+            curentCounter.textContent = '04';
+            renderImg();
+        }
+    };
+    
+    sliderNext.addEventListener('click', () => {
+        useNextSlider();
+    });
+
+    sliderPrev.addEventListener('click', () => {
+        usePreviousSlider();
+    });
+
 });
