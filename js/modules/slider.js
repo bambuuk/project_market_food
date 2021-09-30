@@ -208,8 +208,8 @@ function slider() {
     }
 
     function deleteNotDigits(str) {
-        str = +str.replace(/\D/g, '');
-        return str;
+        // return +str.replace(/\D/g, '');
+            return +str.substring(0, str.length-2);     
     }
 
     next.addEventListener('click', () => {
@@ -217,6 +217,7 @@ function slider() {
             offset = 0;
         } else {
             offset += deleteNotDigits(width);
+            console.log(offset);
         }
 
         moveSliderOX();
