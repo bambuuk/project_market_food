@@ -1,4 +1,4 @@
-function timer() {
+function timer(id) {
     // Timer
 
 
@@ -62,7 +62,7 @@ function timer() {
     }
 
 
-    setClock('.timer', deadline);
+    setClock(id, deadline);
 }
 
-module.exports = timer;
+export default timer;

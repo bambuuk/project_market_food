@@ -1,7 +1,10 @@
-function forms() {
+import {closeModal, openModal} from './modal';
+import {postData} from '../services/services';
+
+function forms(formSelector, modalTimerId) {
     // Forms
 
-    const forms = document.querySelectorAll('form');
+    const forms = document.querySelectorAll(formSelector);
 
     const message = {
         loading: 'img/form/spinner.svg',
@@ -13,21 +16,6 @@ function forms() {
     forms.forEach(item => {
         bindPostData(item);
     });
-
-    // Постинг данных
-    const postData = async (url, data) => {
-
-        // В переменной res мы получаем промис
-        const res = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json'
-            },
-            body: data // data - данные, которые будут постится
-        });
-
-        return await res.json(); // возвращаем проми с формате json
-    };
 
     /** Привязываем постинг данных */
     function bindPostData(form) {
@@ -83,7 +71,7 @@ function forms() {
         const prevModalDialog = document.querySelector('.modal__dialog');
 
         prevModalDialog.classList.add('hide'); // скрыли то, что на модалке
-        openModal(); // открыли само модальное окно
+        openModal('.modal', modalTimerId); // открыли само модальное окно
 
 
         /** Создаём новую начинку модального окна */
@@ -107,7 +95,7 @@ function forms() {
             thanksModal.remove();
             prevModalDialog.classList.add('show');
             prevModalDialog.classList.remove('hide');
-            closeModal();
+            closeModal('.modal');
         }, 4000);
     }
 
@@ -118,4 +106,4 @@ function forms() {
 
 }
 
-module.exports = forms;
+export default forms;
