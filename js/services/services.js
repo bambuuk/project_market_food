@@ -3,6 +3,7 @@
 
         // В переменной res мы получаем промис
         const res = await fetch(url, {
+            mode: 'no-cors',
             method: 'POST',
             headers: {
                 'Content-type': 'application/json'

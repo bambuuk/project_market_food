@@ -1,113 +1,4 @@
 function slider({container, slide, nextArrow, prevArrow, totalCounter, currentCounter, wrapper, field}) {
-    // Slider
-
-    // Мой вариант слайдера
-
-    // const sliderNext = document.querySelector('.offer__slider-next'),
-    //       sliderPrev = document.querySelector('.offer__slider-prev'),
-    //       curentCounter = document.querySelector('#current'),
-    //       sliderImages = document.querySelectorAll('.offer__slide');
-
-
-    // function renderImg() {
-    //     sliderImages.forEach((item, i) => {
-    //         if (i == curentCounter.textContent-1) {
-    //             item.style.display = 'block';    
-    //         } else {
-    //             item.style.display = 'none';
-    //         }
-    //     });
-    // }
-
-    // renderImg();
-
-    // const useNextSlider = () => {
-
-    //     if (+curentCounter.textContent >= 1 && +curentCounter.textContent <= 3) {
-    //         curentCounter.textContent = `0${+curentCounter.textContent + 1}`;
-    //         renderImg();
-    //     } else {
-    //         curentCounter.textContent = '01';
-    //         renderImg();
-    //     }
-    // };
-
-    // const usePreviousSlider = () => {
-
-    //     if (+curentCounter.textContent > 1 && +curentCounter.textContent <= 4) {
-    //         curentCounter.textContent = `0${curentCounter.textContent - 1}`;
-    //         renderImg();
-    //     } else {
-    //         curentCounter.textContent = '04';
-    //         renderImg();
-    //     }
-    // };
-
-    // sliderNext.addEventListener('click', () => {
-    //     useNextSlider();
-    // });
-
-    // sliderPrev.addEventListener('click', () => {
-    //     usePreviousSlider();
-    // });
-
-
-
-
-    // Первый способ создания слайдера - 61 урок
-
-    // const slides = document.querySelectorAll('.offer__slide'),
-    //     prev = document.querySelector('.offer__slider-prev'),
-    //     next = document.querySelector('.offer__slider-next'),
-    //     total = document.querySelector('#total'),
-    //     current = document.querySelector('#current');
-
-    // let slideIndex = 1;
-
-    // showSlides(slideIndex);
-
-    // if (slides.length < 10) {
-    //     total.textContent = `0${slides.length}`;
-    // } else {
-    //     total.textContent = slides.length;
-    // }
-
-    // function showSlides(n) {
-    //     if (n > slides.length) {
-    //         slideIndex = 1;
-    //     }
-    //     if (n < 1) {
-    //         slideIndex = slides.length;
-    //     }
-
-    //     slides.forEach((item) => item.style.display = 'none');
-
-    //     slides[slideIndex - 1].style.display = 'block';
-
-    //     if (slides.length < 10) {
-    //         current.textContent = `0${slideIndex}`;
-    //     } else {
-    //         current.textContent = slideIndex;
-    //     }
-
-    // }
-
-    // function plusSlides (n) {
-    //     showSlides(slideIndex += n);
-    // }
-
-    // prev.addEventListener('click', function(){
-    //     plusSlides(-1);
-    // });
-
-    // next.addEventListener('click', function(){
-    //     plusSlides(1);
-    // });
-
-
-
-
-    // Второй способ создания слайда
 
     const slides = document.querySelectorAll(slide),
         slider = document.querySelector(container),
@@ -130,17 +21,11 @@ function slider({container, slide, nextArrow, prevArrow, totalCounter, currentCo
         current.textContent = slideIndex;
     }
 
-    /**  Здесь мы выставляем ширину блока, 
-    в котором расположены картинки для слайдера */
     slidesField.style.width = 100 * slides.length + '%';
     slidesField.style.display = 'flex';
     slidesField.style.transition = '0.5s all';
-
     slidesWrapper.style.overflow = 'hidden';
 
-
-
-    /** Ниже мы установили одинаковою ширину слайдов */
     slides.forEach(slide => {
         slide.style.width = width;
     });
@@ -208,7 +93,6 @@ function slider({container, slide, nextArrow, prevArrow, totalCounter, currentCo
     }
 
     function deleteNotDigits(str) {
-        // return +str.replace(/\D/g, '');
             return +str.substring(0, str.length-2);     
     }
 
